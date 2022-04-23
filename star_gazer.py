@@ -1,64 +1,67 @@
 import pandas as pd
 
-data = pd.read_csv (r'Other\Star_gazer\hygdata_v3.csv\hygdata_v3.csv')   
-df = pd.DataFrame(data)
-print (df)
-print (df.iloc[0][0])
-
 class Star:
-    def __init__(self,rowdata):
-        self.id=rowdata[0]
-        self.hip=rowdata[1]
-        self.hd=rowdata[2]
-        self.hr=rowdata[3]
-        self.gl=rowdata[4]
-        self.bf=rowdata[5]
-        self.proper=rowdata[6]
-        self.ra=rowdata[7]
-        self.dec=rowdata[8]
-        self.dist=rowdata[9]
-        self.pmra=rowdata[10]
-        self.pmdec=rowdata[11]
-        self.rv=rowdata[12]
-        self.mag=rowdata[13]
-        self.absmag=rowdata[14]
-        self.spect=rowdata[15]
-        self.ci=rowdata[16]
-        self.x=rowdata[17]
-        self.y=rowdata[18]
-        self.z=rowdata[19]
-        self.vx=rowdata[20]
-        self.vy=rowdata[21]
-        self.vz=rowdata[22]
-        self.rarad=rowdata[23]
-        self.decrad=rowdata[24]
-        self.pmrarad=rowdata[25]
-        self.pmdecrad=rowdata[26]
-        self.bayer=rowdata[27]
-        self.flam=rowdata[28]
-        self.con=rowdata[29]
-        self.comp=rowdata[30]
-        self.comp_primary=rowdata[31]
-        self.base=rowdata[32]
-        self.lum=rowdata[33]
-        self.var=rowdata[34]
-        self.var_min=rowdata[35]
-        self.var_max=rowdata[36]
-
+    def __init__(self,data):
+        self.id=data[0]
+        self.hip=data[1]
+        self.hd=data[2]
+        self.hr=data[3]
+        self.gl=data[4]
+        self.bf=data[5]
+        self.proper=data[6]
+        self.ra=data[7]
+        self.dec=data[8]
+        self.dist=data[9]
+        self.pmra=data[10]
+        self.pmdec=data[11]
+        self.rv=data[12]
+        self.mag=data[13]
+        self.absmag=data[14]
+        self.spect=data[15]
+        self.ci=data[16]
+        self.x=data[17]
+        self.y=data[18]
+        self.z=data[19]
+        self.vx=data[20]
+        self.vy=data[21]
+        self.vz=data[22]
+        self.rarad=data[23]
+        self.decrad=data[24]
+        self.pmrarad=data[25]
+        self.pmdecrad=data[26]
+        self.bayer=data[27]
+        self.flam=data[28]
+        self.con=data[29]
+        self.comp=data[30]
+        self.comp_primary=data[31]
+        self.base=data[32]
+        self.lum=data[33]
+        self.var=data[34]
+        self.var_min=data[35]
+        self.var_max=data[36]
 
     def __repr__(self):
         return str(self.id)
+
     def showinfo(self):
         return vars(self)
 
+class Group:
+    def __init__(self,data):
+        content = pd.read_csv (data)   
+        df = pd.DataFrame(content)
+        self.rowdata=[x for x in df.to_numpy().tolist()]
+        self.stars=[Star(stella) for stella in self.rowdata]
+
+    def data(self,ids=all):
+        if ids==all:
+            return self.stars
+        else:
+            return [self.stars[x].showinfo() for x in ids]
+
+        
 
 
-Mystars=[]
-for stella in range(len(df)):
-    Mystars.append(Star(df.iloc[stella]))
-
-print (Mystars)
-print (Mystars[0].showinfo())
 
 
 
