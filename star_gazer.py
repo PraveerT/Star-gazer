@@ -1,4 +1,5 @@
 import pandas as pd
+import math
 
 class Star:
     def __init__(self,data):
@@ -39,6 +40,7 @@ class Star:
         self.var=data[34]
         self.var_min=data[35]
         self.var_max=data[36]
+        
 
     def __repr__(self):
         return str(self.id)
@@ -52,6 +54,8 @@ class Group:
         df = pd.DataFrame(content)
         self.rowdata=[x for x in df.to_numpy().tolist()]
         self.stars=[Star(stella) for stella in self.rowdata]
+        self.categoriescon=self.categories()
+        self.stardict = df.set_index('id').to_dict('index')
 
     def data(self,ids=all):
         if ids==all:
@@ -59,8 +63,27 @@ class Group:
         else:
             return [self.stars[x].showinfo() for x in ids]
 
-        
 
+    def categories(self):
+        constellationdict={}
+        constellations=[ 'nan','Psc', 'Cet', 'And', 'Phe', 'Peg', 'Scl', 'Cas', 'Oct', 'Cep', 'Tuc', 'Hyi', 'UMi', 'Eri', 'Per', 'Tri', 'For', 'Ari', 'Hor', 'Ret',
+'Cam', 'Men', 'Tau', 'Dor', 'Cae', 'Pic', 'Aur', 'Ori', 'Lep', 'Col', 'Mon', 'Gem', 'Car', 'Pup', 'CMa', 'Lyn', 'Vol', 'CMi', 'Cha', 'Cnc', 'Vel', 'UMa', 'Hya', 'Pyx', 'Leo', 'LMi', 'Dra', 'Ant', 'Sex', 'Crt', 'Cen', 'Mus', 'Vir', 'Cru', 'Crv', 'Com', 'CVn', 'Boo', 'Cir', 'Aps', 'Lup', 'Lib', 'TrA', 'Ser', 'Nor', 'CrB', 'Sco', 'Her', 'Oph', 'Ara', 'Pav', 'Sgr', 'CrA', 'Tel', 'Lyr', 'Sct', 'Aql', 'Sge', 'Vul', 'Cyg', 'Cap', 'Del', 'Mic', 'Ind', 'Aqr', 'Equ', 'PsA', 'Gru', 'Lac']
+        for i in constellations:
+            temp=[]
+            for s in self.stars:
+                if i in str(s.con):
+                    temp.append(s.id)
+                else:
+                    pass
+            constellationdict[str(i)]=temp
+        return constellationdict
+
+
+
+
+# Stars=Group(r'C:\Users\prav\All_Projects\Other\Star_gazer\hygdata_v3.csv\hygdata_v3.csv')   
+# Mystars=Stars.stardict()
+# print (Mystars)
 
 
 
