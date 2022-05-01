@@ -59,7 +59,9 @@ class GUI:
         # self.button_1= Button(self.win, text ="Hello",command=partial(self.UpdateMainFrame,1)).grid(row=1,column=1)
         self.Options = OptionMenu(self.win, self.OptionVar,"Constellation", *self.categories1_keys,command=self.UpdateScrollbar).grid(row=3,column=0,pady=15)
         self.listbox.bind('<<ListboxSelect>>', self.UpdateMainFrame)
-  
+        #button
+        self.button = Button(self.win,text ='Show',command = self.button1).grid(row=3,column=1)
+
     def UpdateScrollbar(self,event):
         self.listbox = Listbox(self.selectbox,listvariable=StringVar(value=(self.categories1[str(self.OptionVar.get())])),height=24,selectmode='extended')
         self.scrollbar = Scrollbar(self.selectbox,orient='vertical',command=self.listbox.yview)
@@ -72,7 +74,17 @@ class GUI:
         self.choice=int(self.listbox.get(int(list(self.listbox.curselection())[0])))
         self.attribute=[Label(self.mainframe,text=(str(x)).capitalize()+":",wraplength=500, justify= LEFT, font=('Helvetica', 8, 'bold')).grid(row =r, column =c,sticky='ew',padx= self.padx) for x,r,c in zip(self.data[self.choice].keys(),self.row,self.col)] 
         self.values=[Label(self.mainframe,text=str(x),wraplength=500, justify= LEFT).grid(row =r, column =c+1,sticky='ew') for x,r,c in zip(self.data[self.choice].values(),self.row,self.col)] 
-
+    
+    def button1(self):
+        novi = Toplevel()
+        canvas = Canvas(novi, width = 600, height = 600)
+        canvas.pack(expand = YES, fill = BOTH)
+        file =Image.open("C:\\Users\\prav\\All_Projects\Other\\Star_gazer\\Images\\constellation_images\\%s.gif"%self.OptionVar.get())
+        finalimage=file.resize((600,600))
+        gif1 = ImageTk.PhotoImage(finalimage)
+        canvas.create_image((0,0), image = gif1, anchor = NW)
+        #assigned the gif1 to the canvas object
+        canvas.gif1 = gif1
 
     def run(self):
         self.win.mainloop()
