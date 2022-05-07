@@ -8,11 +8,11 @@ from functools import partial
 from PIL import Image, ImageTk
 
 class GUI:
-    def __init__(self,data,catergories1):
+    def __init__(self,data,constellations):
         self.win=Tk()
         self.win.wm_title("Star Gazer")
-        self.categories1=catergories1
-        self.categories1_keys=list(catergories1.keys())
+        self.constellations=constellations
+        self.constellations_keys=list(constellations.keys())
         #image
         self.tempimage=Image.open(r"C:\Users\prav\All_Projects\Other\Star_gazer\Images\Star_logo.png")
         self.finalimage=self.tempimage.resize((round(self.tempimage.size[0]*0.07),round(self.tempimage.size[1]*0.07)))
@@ -42,12 +42,10 @@ class GUI:
         self.mainframe=LabelFrame(self.win,text="Info",height=self.mainframeheight,width=self.mainframewidth)
         self.mainframe.grid(column=1,row=1)
         self.mainframe.grid_propagate(0)
-        self.attribute=[Label(self.mainframe,text=(str(x)).capitalize()+":",wraplength=500, justify= LEFT, font=('Helvetica', 8, 'bold')).grid(row =r, column =c,sticky='ew',padx= self.padx) for x,r,c in zip(self.data[0].keys(),self.row,self.col)] 
-        self.values=[Label(self.mainframe,text=str(x),wraplength=500, justify= LEFT).grid(row =r, column =c+1,sticky='ew') for x,r,c in zip(self.data[0].values(),self.row,self.col)] 
-
-        #Listbox
+        
         self.selectbox=LabelFrame(self.win,text="All stars")
         self.selectbox.grid(column=0,row=1)
+        
         self.listbox = Listbox(self.selectbox,listvariable=StringVar(value=list(self.data.keys())),height=24,selectmode='extended')
         self.listbox.grid(column=0,row=0,sticky='nwes')
         
@@ -57,13 +55,17 @@ class GUI:
         #Option
         self.OptionVar= StringVar()
         # self.button_1= Button(self.win, text ="Hello",command=partial(self.UpdateMainFrame,1)).grid(row=1,column=1)
-        self.Options = OptionMenu(self.win, self.OptionVar,"Constellation", *self.categories1_keys,command=self.UpdateScrollbar).grid(row=3,column=0,pady=15)
+        self.Options = OptionMenu(self.win, self.OptionVar,"Constellation", *self.constellations_keys,command=self.UpdateScrollbar).grid(row=3,column=0,pady=15)
         self.listbox.bind('<<ListboxSelect>>', self.UpdateMainFrame)
         #button
         self.button = Button(self.win,text ='Show',command = self.button1).grid(row=3,column=1)
 
+        self.listbox.select_set(0)
+        self.UpdateMainFrame(self.listbox.curselection())
+   
+
     def UpdateScrollbar(self,event):
-        self.listbox = Listbox(self.selectbox,listvariable=StringVar(value=(self.categories1[str(self.OptionVar.get())])),height=24,selectmode='extended')
+        self.listbox = Listbox(self.selectbox,listvariable=StringVar(value=(self.constellations[str(self.OptionVar.get())])),height=24,selectmode='extended')
         self.scrollbar = Scrollbar(self.selectbox,orient='vertical',command=self.listbox.yview)
         self.listbox['yscrollcommand'] = self.scrollbar.set
         self.scrollbar.grid(column=1,row=0,sticky='ns')
