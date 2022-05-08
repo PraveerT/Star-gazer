@@ -6,6 +6,8 @@ import numpy as np
 import star_gazer
 from functools import partial
 from PIL import Image, ImageTk
+import matplotlib.pyplot as plt
+import math
 
 class GUI:
     def __init__(self,data,constellations):
@@ -58,7 +60,10 @@ class GUI:
         self.Options = OptionMenu(self.win, self.OptionVar,"Constellation", *self.constellations_keys,command=self.UpdateScrollbar).grid(row=3,column=0,pady=15)
         self.listbox.bind('<<ListboxSelect>>', self.UpdateMainFrame)
         #button
-        self.button = Button(self.win,text ='Show',command = self.button1).grid(row=3,column=1)
+        self.buttonspace=LabelFrame(self.win)
+        self.buttonspace.grid(row=3,column=1)
+        self.button1 = Button(self.buttonspace,text ='Show',command = self.button1action).grid(row=0,column=0)
+        self.button2 = Button(self.buttonspace,text ='Abs Mag vs Lum',command = self.button2action).grid(row=0,column=1)
 
         self.listbox.select_set(0)
         self.UpdateMainFrame(self.listbox.curselection())
@@ -73,11 +78,12 @@ class GUI:
         self.listbox.bind('<<ListboxSelect>>', self.UpdateMainFrame)
 
     def UpdateMainFrame(self,event):
+        
         self.choice=int(self.listbox.get(int(list(self.listbox.curselection())[0])))
         self.attribute=[Label(self.mainframe,text=(str(x)).capitalize()+":",wraplength=500, justify= LEFT, font=('Helvetica', 8, 'bold')).grid(row =r, column =c,sticky='ew',padx= self.padx) for x,r,c in zip(self.data[self.choice].keys(),self.row,self.col)] 
         self.values=[Label(self.mainframe,text=str(x),wraplength=500, justify= LEFT).grid(row =r, column =c+1,sticky='ew') for x,r,c in zip(self.data[self.choice].values(),self.row,self.col)] 
     
-    def button1(self):
+    def button1action(self):
         novi = Toplevel()
         canvas = Canvas(novi, width = 600, height = 600)
         canvas.pack(expand = YES, fill = BOTH)
@@ -88,9 +94,24 @@ class GUI:
         #assigned the gif1 to the canvas object
         canvas.gif1 = gif1
 
+    def button2action(self):
+        stardataAmag=[list(self.data[star].values())[13] for star in (self.constellations[str(self.OptionVar.get())])]
+        stardatalum=[(list(self.data[star].values())[32]) for star in (self.constellations[str(self.OptionVar.get())])]
+        
+        fig, ax = plt.subplots()
+        ax.plot(stardataAmag, stardatalum,'x')
+
+        ax.set(xlabel='AMag', ylabel='Lum',
+            title='Abs Mag vs luminosity')
+        ax.grid()
+
+        fig.savefig("test.png")
+        plt.show()
+
     def run(self):
         self.win.mainloop()
 
 Stars=star_gazer.Group(r'C:\Users\prav\All_Projects\Other\Star_gazer\hygdata_v3.csv\hygdata_v3.csv')   
 Mywindow=GUI(Stars.stardict,Stars.categoriescon)
+
 Mywindow.run()
